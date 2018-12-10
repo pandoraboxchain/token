@@ -1,0 +1,44 @@
+{
+  "name": "pan-token",
+  "version": "0.0.1",
+  "description": "Tickets management platform on smart contracts",
+  "main": "index.js",
+  "scripts": {
+    "lint": "npx solhint contracts/**/*.sol",
+    "compile": "npx truffle compile",
+    "deploy": "npx truffle migrate --network rinkeby",
+    "test": "./test/test.sh",
+    "test:coverage": "SOLIDITY_COVERAGE=true ./test/test.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:pandoraboxchain/token.git"
+  },
+  "keywords": [
+    "ethereum",
+    "solidity",
+    "tickets"
+  ],
+  "author": "Kostiantyn Smyrnov <kostysh@gmail.com>",
+  "contributors": [
+    "Kostiantyn Smyrnov <kostysh@gmail.com>"
+  ],
+  "homepage": "https://github.com/pandoraboxchain/token",
+  "devDependencies": {
+    "@babel/core": "7.2.0",
+    "@babel/polyfill": "7.0.0",
+    "@babel/preset-env": "7.2.0",
+    "@babel/register": "7.0.0",
+    "eslint": "5.10.0",
+    "ganache-cli": "6.2.3",
+    "openzeppelin-solidity": "2.0.0",
+    "solidity-coverage": "0.5.11",
+    "solhint": "1.4.0",
+    "truffle": "4.1.14",
+    "truffle-privatekey-provider": "1.0.0",
+    "ethereumjs-abi": "0.6.5",
+    "chai": "4.2.0",
+    "chai-bignumber": "3.0.0"
+  },
+  "license": "MIT"
+}
