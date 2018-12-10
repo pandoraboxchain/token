@@ -17,6 +17,5 @@ contract Pan is ERC20Mintable {
      */
     constructor (uint256 _totalSupply) public {
         mint(msg.sender, _totalSupply);
-        approve(msg.sender, _totalSupply);
     }
 }

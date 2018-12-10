@@ -8,8 +8,8 @@ let privateKey = '';
 let infuraKey = '';
 
 try {
-    privateKey = require('./key').key;
-    infuraKey = require('./key').infkey;
+    privateKey = require('./localkeys').key;
+    infuraKey = require('./localkeys').infkey;
 } catch(err) {}
 
 module.exports = {
