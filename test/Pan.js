@@ -11,7 +11,9 @@ contract('Pan', ([owner1, owner2, owner3]) => {
     let pan;
 
     beforeEach(async () => {
-        pan = await Pan.deployed();
+        pan = await Pan.new(totalSupply, {
+            from: owner1
+        });
     });
 
     describe('ERC20 getters', () => {

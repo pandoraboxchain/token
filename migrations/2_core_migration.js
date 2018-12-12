@@ -9,7 +9,7 @@ module.exports = (deployer, network, accounts) => {
         .then(balance => {
             
             console.log('#'.repeat(40));
-            console.log('Final balance:', web3.fromWei(balance, 'ether'));
+            console.log('Final balance:', web3.fromWei(balance, 'ether'), 'ETH');
             console.log('#'.repeat(40));
 
         })

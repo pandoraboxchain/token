@@ -14,6 +14,7 @@ contract MultiSigWallet {
     event Execution(uint indexed transactionId);
     event ExecutionFailure(uint indexed transactionId);
     event Deposit(address indexed sender, uint value);
+    event Withdraw(address indexed to, uint value);
     event OwnerAddition(address indexed owner);
     event OwnerRemoval(address indexed owner);
     event RequirementChange(uint required);
@@ -65,10 +66,10 @@ contract MultiSigWallet {
     }
 
     /**
-     * @dev Throws if transaction had been confirmed
+     * @dev Throws if transaction had not been confirmed
      */
     modifier confirmed(uint transactionId, address owner) {
-        require(confirmations[transactionId][owner], "ERROR_TRANSACTION_ALREADY_CONFIRMED");
+        require(confirmations[transactionId][owner], "ERROR_TRANSACTION_NOT_CONFIRMED");
         _;
     }
 
@@ -76,15 +77,15 @@ contract MultiSigWallet {
      * @dev Throws if transaction had not been confirmed
      */ 
     modifier notConfirmed(uint transactionId, address owner) {
-        require(!confirmations[transactionId][owner], "ERROR_TRANSACTION_NOT_CONFIRMED");
+        require(!confirmations[transactionId][owner], "ERROR_TRANSACTION_ALREADY_CONFIRMED");
         _;
     }
 
     /**
-     * @dev Throws if transaction has not been executed
+     * @dev Throws if transaction has been executed
      */
     modifier notExecuted(uint transactionId) {
-        require(!transactions[transactionId].executed, "ERROR_TRANSACTION_NOT_EXECUTED");
+        require(!isExecuted(transactionId), "ERROR_TRANSACTION_ALREADY_EXECUTED");
         _;
     }
 
@@ -103,8 +104,8 @@ contract MultiSigWallet {
      * @notice Throws if ownerCount not fits in MAX_OWNER_COUNT
      */
     modifier validRequirement(uint ownerCount, uint _required) {
-        require(ownerCount <= MAX_OWNER_COUNT &&
-            _required <= ownerCount &&
+        require(ownerCount <= MAX_OWNER_COUNT && 
+            _required <= ownerCount && 
             _required != 0 &&
             ownerCount != 0, "ERROR_INVALID_REQUIRED_CONFIRMATIONS_NUMBER");
         _;
@@ -118,6 +119,25 @@ contract MultiSigWallet {
         if (msg.value > 0) {
             emit Deposit(msg.sender, msg.value);
         }            
+    }
+
+    /**
+     * @dev Get current contract balance
+     */
+    function walletBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+
+    /**
+     * @dev Withdraw contract balance
+     * @param to Funds recipient address
+     * @notice Transaction has to be sent by wallet.
+     */
+    function withdraw(address to) public 
+    onlyWallet 
+    notNull(to) {
+        emit Withdraw(to, address(this).balance);
+        to.transfer(address(this).balance);
     }
 
     /**
@@ -137,8 +157,9 @@ contract MultiSigWallet {
     }
 
     /**
-     * @dev Allows to add a new owner. Transaction has to be sent by wallet.
+     * @dev Allows to add a new owner. 
      * @param owner Address of new owner.
+     * @notice Transaction has to be sent by wallet.
      */
     function addOwner(address owner) public 
     onlyWallet 
@@ -151,10 +172,14 @@ contract MultiSigWallet {
     }
 
     /**
-     * @dev Allows to remove an owner. Transaction has to be sent by wallet.
+     * @dev Allows to remove an owner. 
      * @param owner Address of owner.
+     * @notice Transaction has to be sent by wallet.
      */
-    function removeOwner(address owner) public onlyWallet ownerExists(owner) {
+    function removeOwner(address owner) public 
+    onlyWallet 
+    ownerExists(owner) {
+
         isOwner[owner] = false;
 
         for (uint i = 0; i < owners.length - 1; i++) {
@@ -175,9 +200,10 @@ contract MultiSigWallet {
     }
 
     /**
-     * @dev Allows to replace an owner with a new owner. Transaction has to be sent by wallet.
+     * @dev Allows to replace an owner with a new owner.
      * @param owner Address of owner to be replaced.
      * @param newOwner Address of new owner.
+     * @notice Transaction has to be sent by wallet.
      */
     function replaceOwner(address owner, address newOwner) public 
     onlyWallet 
@@ -223,7 +249,6 @@ contract MultiSigWallet {
         bytes memory data
     ) public
     returns(uint transactionId) {
-
         transactionId = addTransaction(destination, value, data);
         confirmTransaction(transactionId);
     }
@@ -236,7 +261,6 @@ contract MultiSigWallet {
     ownerExists(msg.sender)
     transactionExists(transactionId)
     notConfirmed(transactionId, msg.sender) {
-
         confirmations[transactionId][msg.sender] = true;
         emit Confirmation(msg.sender, transactionId);
         executeTransaction(transactionId);
@@ -265,14 +289,19 @@ contract MultiSigWallet {
     notExecuted(transactionId) {
 
         if (isConfirmed(transactionId)) {
-            Transaction storage txn = transactions[transactionId];
-            txn.executed = true;
 
-            if (external_call(txn.destination, txn.value, txn.data.length, txn.data))
+            transactions[transactionId].executed = true; 
+
+            if (external_call(
+                transactions[transactionId].destination, 
+                transactions[transactionId].value, 
+                transactions[transactionId].data.length, 
+                transactions[transactionId].data
+            )) {
                 emit Execution(transactionId);
-            else {
+            } else {
                 emit ExecutionFailure(transactionId);
-                txn.executed = false;
+                transactions[transactionId].executed = false;
             }
         }
     }
@@ -304,6 +333,7 @@ contract MultiSigWallet {
                 0 // Output is ignored, therefore the output size is zero
             )
         }
+
         return result;
     }
 
@@ -325,6 +355,17 @@ contract MultiSigWallet {
                 return true;
             }                
         }
+
+        return false;
+    }
+
+    /**
+     * @dev Returns the execution status of a transaction.
+     * @param transactionId Transaction ID.
+     * @return Execution status.
+     */
+    function isExecuted(uint transactionId) public view returns(bool) {
+        return transactions[transactionId].executed;
     }
 
     /**
@@ -420,33 +461,34 @@ contract MultiSigWallet {
      * @dev Returns list of transaction IDs in defined range.
      * @param from Index start position of transaction array.
      * @param to Index end position of transaction array.
-     * @param pending Include pending transactions.
-     * @param executed Include executed transactions.
+     * @param pending Include pending transactions only.
      * @return Returns array of transaction IDs.
      */
     function getTransactionIds(
         uint from, 
         uint to, 
-        bool pending, 
-        bool executed
+        bool pending
     ) public view returns(uint[] memory _transactionIds) {
-        uint[] memory transactionIdsTemp = new uint[](transactionCount);
-        uint count = 0;
-        uint i;
+        require(from < to, "ERROR_INVALID_RANGE");
 
-        for (i = 0; i < transactionCount; i++) {
+        uint range = to;
+        uint count = 0;
+
+        if (range > transactionCount) {
+            range = transactionCount;
+        }
+
+        _transactionIds = new uint[](range - from);
+
+        for (uint i = from; i < range; i++) {
             
-            if (pending && !transactions[i].executed ||
-                executed && transactions[i].executed) {
-                transactionIdsTemp[count] = i;
+            if (!pending || pending && !isExecuted(i)) {
+                
+                _transactionIds[count] = i;
                 count += 1;
             }
         }
-            
-        _transactionIds = new uint[](to - from);
 
-        for (i = from; i < to; i++) {
-            _transactionIds[i - from] = transactionIdsTemp[i];
-        }            
+        return _transactionIds;            
     }
 }

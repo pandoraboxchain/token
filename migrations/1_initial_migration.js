@@ -12,8 +12,8 @@ module.exports = (deployer, network, accounts) => {
         .then(gasPrice => {
 
             console.log('#'.repeat(40));
-            console.log('Initial balance:', web3.fromWei(initialBalance, 'ether'));
-            console.log('Gas price:', web3.fromWei(gasPrice, 'ether'));
+            console.log('Initial balance:', web3.fromWei(initialBalance, 'ether'), 'ETH');
+            console.log('Gas price:', web3.fromWei(gasPrice, 'ether'), 'ETH');
             console.log('#'.repeat(40));
 
             return deployer.deploy(Migrations);

@@ -6,6 +6,6 @@ module.exports = (target, eventName) => new Promise((resolve, reject) => {
             return reject(err);
         }
 
-        result.length > 0 ? resolve() : reject();                        
+        result.length > 0 ? resolve(result) : reject(new Error(`Event "${eventName}" not fired`));
     });
 });
