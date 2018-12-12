@@ -23,6 +23,13 @@ let wallet = ultiSigWallet.deployed()
 pan.addMinter(wallet.address, { from: accounts[0] });
 ```
 
+## Deposit some ether to the wallet
+Wallet balance should not be empty because ether required for transactions executions.  
+
+```js
+wallet.send(web3.toWei(5, 'ether'), { from: accounts[0] });
+```
+
 ## Renounce a initial `minter` from  the token
 
 ```js
