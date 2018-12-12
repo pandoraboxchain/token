@@ -23,7 +23,7 @@ start_ganache() {
   if [ "$SOLIDITY_COVERAGE" = true ]; then
     npx testrpc-sc --gasLimit 0xfffffffffff --port="$ganache_port" --defaultBalanceEther=100000000000 > /dev/null &
   else
-    npx ganache-cli --debug --gasLimit 0xfffffffffff --port="$ganache_port" --defaultBalanceEther=100000000000 > /dev/null &
+    npx ganache-cli --gasLimit 0xfffffffffff --port="$ganache_port" --defaultBalanceEther=100000000000 > /dev/null &
   fi    
 
   ganache_pid=$!

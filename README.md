@@ -18,3 +18,6 @@ Run tests with coverage:
 ```sh
 npm run test:coverage
 ```
+
+### How to deploy and use MultiSigWallet with a token
+[./docs/multisigwallet.md](./docs/multisigwallet.md)
