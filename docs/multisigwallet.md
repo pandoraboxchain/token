@@ -8,7 +8,7 @@ npx ganache-cli --gasLimit 0xfffffffffff --port=8545
 npx truffle migrate --network ganache
 ```
 
-#### For using truffle console use:
+#### For using truffle console
 
 ```sh
 npx truffle console --network ganache
