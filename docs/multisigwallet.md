@@ -27,7 +27,7 @@ let pan = Pan.deployed();
 ```js
 deployer.deploy(MultiSigWallet, [accounts[0]], 1);// specify your owners list and `required` value
 ...
-let wallet = ultiSigWallet.deployed()
+let wallet = MultiSigWallet.deployed()
 ```
 
 ## Add wallet address as `minter` role to token contract
