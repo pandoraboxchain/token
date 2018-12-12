@@ -1,5 +1,18 @@
 # MultiSigWallet
-deployment and usage (see migrations script). Point your attention that all methods calls described below are asynchronous (code is simplified for better understanding)
+deployment and usage ([see migrations script](../migrations/2_core_migration.js)). Point your attention that all methods calls described below are asynchronous (code is simplified for better understanding)
+
+#### All initial deployment steps can be done with migration and tested on local ganache instance
+
+```sh
+npx ganache-cli --gasLimit 0xfffffffffff --port=8545
+npx truffle migrate --network ganache
+```
+
+#### For using truffle console use:
+
+```sh
+npx truffle console --network ganache
+```
 
 ## Tokent deployment
 Initially we have to deploy a Pan token with zero balance:
