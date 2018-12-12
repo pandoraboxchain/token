@@ -52,7 +52,7 @@ pan.renounceMinter({ from: accounts[0] });
 ### `From this moment all token mining and transferring features can started thru multisig wallet only`
 
 
-## Submit a first transaction and mint required a amount of tokens
+## Submit a first transaction and mint required amount of tokens
 
 ```js
 let transactionId = wallet.submitTransaction(pan.address, 0, pan.contract.mint.getData(wallet.address, 5000000), { from: accounts[0] });
