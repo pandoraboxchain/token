@@ -15,10 +15,10 @@ npm i
 ```sh
 npm run test
 ```
-Run tests with [coverage](./coverage/index.html):
+Run tests with [coverage](./coverage):
 ```sh
 npm run test:coverage
 ```
 
-## Deployement notes
+## Deployment notes
 [./docs/multisigwallet.md](./docs/multisigwallet.md)
