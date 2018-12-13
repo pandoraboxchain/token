@@ -21,9 +21,9 @@ fi
 
 start_ganache() {
   if [ "$SOLIDITY_COVERAGE" = true ]; then
-    npx testrpc-sc --gasLimit 0xfffffffffff --port="$ganache_port" --defaultBalanceEther=100000000000 > /dev/null &
+    npx testrpc-sc --gasLimit 0xfffffffffff --port="$ganache_port" --defaultBalanceEther=100000000000 --accounts=20 > /dev/null &
   else
-    npx ganache-cli --gasLimit 0xfffffffffff --port="$ganache_port" --defaultBalanceEther=100000000000 > /dev/null &
+    npx ganache-cli --gasLimit 0xfffffffffff --port="$ganache_port" --defaultBalanceEther=100000000000 --accounts=20 > /dev/null &
   fi    
 
   ganache_pid=$!
@@ -44,5 +44,5 @@ fi
 if [ "$SOLIDITY_COVERAGE" = true ]; then
   npx solidity-coverage  
 else
-  npx --node-arg=--max-old-space-size=4096 truffle test ./test/MultiSigWallet.js --network ganache_cli
+  npx --node-arg=--max-old-space-size=4096 truffle test --network ganache_cli #
 fi

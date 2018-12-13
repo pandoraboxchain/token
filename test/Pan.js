@@ -11,12 +11,21 @@ contract('Pan', ([owner1, owner2, owner3]) => {
     let pan;
 
     beforeEach(async () => {
-        pan = await Pan.new(totalSupply, {
-            from: owner1
-        });
+        pan = await Pan.new({ from: owner1 });
+        await pan.initializeMintable(owner1, { from: owner1 });
+        await pan.mint(owner1, totalSupply, { from: owner1 });        
     });
 
     describe('ERC20 getters', () => {
+
+        it('standart constants', async () => {
+            const name = await pan.name();
+            const symbol = await pan.symbol();
+            const decimals = await pan.decimals();
+            (name).should.equal('Pandora AI Network Token');
+            (symbol).should.equal('PAN');
+            (decimals).should.be.bignumber.equal(18);
+        });
 
         it('#totalSupply', async () => {
             const ts = await pan.totalSupply();

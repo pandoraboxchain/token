@@ -1,23 +1,24 @@
-# token
-PAN token
+# PAN token
+ERC20 tokent with upgradeability and MultiSig governance
 
-### Requirements
+
+## Requirements
 - node.js v9 (up)
 - npm
 
-### Setup
+## Setup
 ```sh
 npm i
 ```
 
-### Testing
+## Testing
 ```sh
 npm run test
 ```
-Run tests with coverage:
+Run tests with [coverage](./coverage/index.html):
 ```sh
 npm run test:coverage
 ```
 
-### How to deploy and use MultiSigWallet with a token
+## Deployement notes
 [./docs/multisigwallet.md](./docs/multisigwallet.md)

@@ -168,27 +168,35 @@ contract('MultiSigWallet', async ([owner1, owner2, owner3, owner4, owner5, owner
             (confirmations[1]).should.equal(owner2);
         });
 
-        it('#getTransactionIds should return transactions Ids', async () => {
-            const addOwnerData = wallet.contract.addOwner.getData(owner6);
-            let submitResult = await wallet.submitTransaction(wallet.address, 0, addOwnerData, { from: owner1 });
-            let events = submitResult.logs.filter(l => (
-                l.event === 'Submission' && submitResult.tx === l.transactionHash
-            ));
-            const transactionId1 = events[0].args.transactionId.toNumber();
-            await sendConfirmations(wallet, transactionId1, [owner2]);
+        it('#getPendingTransactionIds should return transactions Ids', async () => {
+            const addOwnerData6 = wallet.contract.addOwner.getData(owner6);
+            await wallet.submitTransaction(wallet.address, 0, addOwnerData6, { from: owner1 });
+            const addOwnerData7 = wallet.contract.addOwner.getData(owner7);
+            await wallet.submitTransaction(wallet.address, 0, addOwnerData7, { from: owner1 });
+                        
+            // pending (2), executed (0)
+            let transactionIds = await wallet.getPendingTransactionIds();
+            (transactionIds.length).should.equal(2);
 
-            let transactionIds = await wallet.getTransactionIds(0, 1, true);// pending (1), executed (0)
-            (transactionIds.length).should.equal(1);
-            transactionIds = await wallet.getTransactionIds(0, 1, false);// pending (1) & executed (0)
-            (transactionIds.length).should.equal(1);
+            const addOwnerData8 = wallet.contract.addOwner.getData(owner8);
+            await wallet.submitTransaction(wallet.address, 0, addOwnerData8, { from: owner1 });
 
-            await sendConfirmations(wallet, transactionId1, [owner3, owner4, owner5]);
+            // pending (3), executed (0)
+            transactionIds = await wallet.getPendingTransactionIds();
+            (transactionIds.length).should.equal(3);
+            
+            await sendConfirmations(wallet, transactionIds[0].toNumber(), [owner2, owner3, owner4, owner5]);
 
-            // transactionIds = await wallet.getTransactionIds(0, 1, true);// pending (0) & executed (1)
-            // (transactionIds.length).should.equal(0);
+            // pending (2), executed (1)
+            transactionIds = await wallet.getPendingTransactionIds();
+            (transactionIds.length).should.equal(2);
 
-            transactionIds = await wallet.getTransactionIds(0, 1, false);// pending (0) & executed (1)
-            (transactionIds.length).should.equal(1);
+            await sendConfirmations(wallet, transactionIds[0].toNumber(), [owner2, owner3, owner4, owner5]);
+            await sendConfirmations(wallet, transactionIds[1].toNumber(), [owner2, owner3, owner4, owner5]);
+
+            // pending (0), executed (3)
+            transactionIds = await wallet.getPendingTransactionIds();
+            (transactionIds.length).should.equal(0);
         });
     });
 

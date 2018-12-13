@@ -1,4 +1,4 @@
-# MultiSigWallet
+# MultiSigWallet and PAN token deployment notes
 deployment and usage ([see migrations script](../migrations/2_core_migration.js)). Point your attention that all methods calls described below are asynchronous (code is simplified for better understanding)
 
 #### All initial deployment steps can be done with migration and tested on local ganache instance
@@ -14,26 +14,12 @@ npx truffle migrate --network ganache
 npx truffle console --network ganache
 ```
 
-## Tokent deployment
-Initially we have to deploy a Pan token with zero balance:
-```js
-deployer.deploy(Pan, 0);
-...
-let pan = Pan.deployed();
-```
-
 ## MultiSigWallet deployment
 
 ```js
 deployer.deploy(MultiSigWallet, [accounts[0]], 1);// specify your owners list and `required` value
 ...
 let wallet = MultiSigWallet.deployed()
-```
-
-## Add wallet address as `minter` role to token contract
-
-```js
-pan.addMinter(wallet.address, { from: accounts[0] });
 ```
 
 ## Deposit some ether to the wallet
@@ -43,10 +29,32 @@ Wallet balance should not be empty because ether required for transactions execu
 wallet.send(web3.toWei(5, 'ether'), { from: accounts[0] });
 ```
 
-## Renounce a initial `minter` from  the token
+## Upgradeability proxy deployment
 
 ```js
-pan.renounceMinter({ from: accounts[0] });
+let proxy = deployer.deploy(OwnedUpgradeabilityProxy)
+```
+
+## Move ownership of Proxy to the MultiSig wallet 
+
+```js
+proxy.transferProxyOwnership(wallet.address, { from: accounts[0] })
+```
+
+## Tokent deployment
+
+```js
+deployer.deploy(Pan);
+...
+let pan = Pan.deployed();
+```
+
+## Apply token implementation to the proxy contract (miner role is a wallet)
+
+```js
+const initData_v0 = impl_v0.contract.initializeMintable.getData(wallet.address);
+const proxyCallData_0 = proxy.contract.upgradeToAndCall.getData(impl_v0.address, initData_v0);
+wallet.submitTransaction(proxy.address, 0, proxyCallData_0, { from: accounts[0] });
 ```
 
 ### `From this moment all token mining and transferring features can started thru multisig wallet only`

@@ -458,35 +458,28 @@ contract MultiSigWallet {
     }
 
     /**
-     * @dev Returns list of transaction IDs in defined range.
-     * @param from Index start position of transaction array.
-     * @param to Index end position of transaction array.
-     * @param pending Include pending transactions only.
+     * @dev Returns list of pending transaction IDs
      * @return Returns array of transaction IDs.
      */
-    function getTransactionIds(
-        uint from, 
-        uint to, 
-        bool pending
-    ) public view returns(uint[] memory _transactionIds) {
-        require(from < to, "ERROR_INVALID_RANGE");
-
-        uint range = to;
+    function getPendingTransactionIds() public view returns(uint[] memory) {
+        uint[] memory _transactionIds;
+        uint[] memory transactionIdsTemp = new uint[](transactionCount);
         uint count = 0;
+        uint i;
 
-        if (range > transactionCount) {
-            range = transactionCount;
-        }
+        for (i = 0; i < transactionCount; i++) {
 
-        _transactionIds = new uint[](range - from);
+            if (!isExecuted(i)) {
 
-        for (uint i = from; i < range; i++) {
-            
-            if (!pending || pending && !isExecuted(i)) {
-                
-                _transactionIds[count] = i;
+                transactionIdsTemp[count] = i;
                 count += 1;
             }
+        }
+        
+        _transactionIds = new uint[](count);
+
+        for (i = 0; i < count; i++) {
+            _transactionIds[i] = transactionIdsTemp[i];
         }
 
         return _transactionIds;            
