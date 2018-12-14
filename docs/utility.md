@@ -22,7 +22,7 @@ Be this carefully with this!
 ## Utility configuration
 
 Token and wallet addresses can be configured in two ways. 
-The first one is `config.json` file which located here: [./scripts/config.json](./scripts/config.json)  
+The first one is `config.json` file which located here: [../scripts/config.json](../scripts/config.json)  
 These addresses are the real addresses of entities in the Rinkeby test network.
 
 ```json
