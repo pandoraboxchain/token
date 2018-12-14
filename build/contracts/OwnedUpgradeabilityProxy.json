@@ -3497,6 +3497,42 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {
+    "4": {
+      "events": {
+        "0x5a3e66efaa1e445ebd894728a69d6959842ea1e97bd79b892797106e270efcd9": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "ProxyOwnershipTransferred",
+          "type": "event"
+        },
+        "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "implementation",
+              "type": "address"
+            }
+          ],
+          "name": "Upgraded",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xcabc26f129c2473494c232864765c62d3cc05f8e",
+      "transactionHash": "0x068ba9bf9a3de7b9aeda4e532dbfef1301c621d03f2ebf760ecf9e9ee410528e"
+    },
     "1544679006985": {
       "events": {
         "0x5a3e66efaa1e445ebd894728a69d6959842ea1e97bd79b892797106e270efcd9": {
@@ -3532,8 +3568,44 @@
       "links": {},
       "address": "0x35fd31d4e15d4838451d39c5bbd695805776f6a2",
       "transactionHash": "0x703e416b18f166451eee1c71aa57cef5286e6acca4d85ee588d9a92da5963d9b"
+    },
+    "1544755930710": {
+      "events": {
+        "0x5a3e66efaa1e445ebd894728a69d6959842ea1e97bd79b892797106e270efcd9": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "ProxyOwnershipTransferred",
+          "type": "event"
+        },
+        "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "implementation",
+              "type": "address"
+            }
+          ],
+          "name": "Upgraded",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x791f47cd3df4a7eb297213da880340757cbd0a98",
+      "transactionHash": "0x3b4eb9603d11723bb8742f0838ae22bdeb0cdeaf951337f2c2ea0828683e82ad"
     }
   },
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-12-13T05:32:39.333Z"
+  "updatedAt": "2018-12-14T02:52:58.168Z"
 }

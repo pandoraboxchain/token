@@ -21,4 +21,7 @@ npm run test:coverage
 ```
 
 ## Deployment notes
-[./docs/multisigwallet.md](./docs/multisigwallet.md)
+[./docs/multisigwallet.md](./docs/multisigwallet.md)  
+
+## Token governance utility notes
+[./docs/utility.md](./docs/utility.md)

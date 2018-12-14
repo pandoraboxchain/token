@@ -32,7 +32,7 @@ module.exports = (deployer, network, accounts) => {
         })
         .then(_ => {
             pan = Pan.at(proxy.address);
-            const mintData = pan.contract.mint.getData(wallet.address, 5000000);
+            const mintData = pan.contract.mint.getData(wallet.address, 5000000000000000000000000);
             return wallet.submitTransaction(pan.address, 0, mintData, { from: accounts[0] });
         })
         .then(_ => checkBalance(web3, accounts[0]))
