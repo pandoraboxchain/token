@@ -48,7 +48,7 @@ npx truffle exec ./scripts/pan.js --network rinkeby action=get target=token cmd=
 
 `cmd` option - is the method you want to call. You should write names of these methods identically as in the contract source.  
 
-`target` option is dedicated to point on which methods you want to call. If you want to call token functions you shold set `token` as value of the `target` and `wallet` if you want to cal wallets functions.  
+`target` option is dedicated to point on which methods you want to call. If you want to call token functions you shold set `token` as value of the `target` and `wallet` if you want to call wallets functions.  
 
 Functions parameters (`params` option) should be separated by coma (`,`)
 
